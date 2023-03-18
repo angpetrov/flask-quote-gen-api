@@ -1,3 +1,6 @@
+## Overview
+This is a Flask application that allows users to create, read, update, and delete quotes. The application also displays a random quote on the homepage.
+
 ## Setting up the Flask App and PostgreSQL Database
 
 1.  Clone the repository from GitHub: `git clone https://github.com/angpetrov/flask-quote-gen-api.git`
