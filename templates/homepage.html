@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container flex-center">
+    <h1 class="text-center mb-4">Random Quote:</h1>
+    <div class="card p-3 mb-3">
+      {% if quote %}
+      <blockquote class="blockquote mb-0">
+        <p class="card-text">{{ quote.quote }}</p>
+      </blockquote>
+      {% else %}
+      <p>{{ message }}</p>
+      {% endif %}
+    </div>
+    <div class="text-center">
+      <button id="new-quote" class="btn btn-primary">Generate New Quote</button>
+    </div>
+    <div class="homepage-text-container">
+      <p class="text-center">Find inspiration in every day. Let our daily quotes motivate and inspire you to be your best self.</p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("new-quote").addEventListener("click", function() {
+      fetch("/").then(response => response.text()).then(html => {
+        const parser = new DOMParser();
+        const newDocument = parser.parseFromString(html, "text/html");
+        const newQuote = newDocument.querySelector(".card-text").textContent;
+        document.querySelector(".card-text").textContent = newQuote;
+      });
+    });
+  </script>
+{% endblock %}
