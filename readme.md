@@ -9,7 +9,10 @@
 7.  Create a new PostgreSQL database instance, and note the database credentials.
 8.  Update the `app.py` file with the PostgreSQL database URI and secret key:
 
-`app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://<username>:<password>@<hostname>:<port>/<database_name>' app.config['SECRET_KEY'] = '<secret_key>'`
+```
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://<username>:<password>@<hostname>:<port>/<database_name>' 
+app.config['SECRET_KEY'] = '<secret_key>'
+```
 
 9.  Set up the database by running the following commands:
 - `flask db init`
@@ -27,16 +30,50 @@
 
 1.  Open a web browser and navigate to `http://localhost:5000/`.
 2.  You should see a random quote from the database displayed on the screen.
-3.  To create a new quote, send a `POST` request to `http://localhost:5000/quotes` with the following JSON payload:
 
-`{ "quote": "<quote_text>" }`
+## Using the API
+1.  To create a new quote, send a `POST` request to `http://localhost:5000/quotes` with the following JSON payload:
+```
+POST /quotes HTTP/1.1
+Host: localhost:5000
+Authorization: Basic YWRtaW46cGFzc3dvcmQ=
+Content-Type: application/json
 
-4.  To get all quotes for the currently authenticated user, send a `GET` request to `http://localhost:5000/quotes`.
-5.  To get a specific quote by ID, send a `GET` request to `http://localhost:5000/quotes/<quote_id>`.
-6.  To update a specific quote by ID, send a `PUT` request to `http://localhost:5000/quotes/<quote_id>` with the following JSON payload:
+{
+  "quote": "To be or not to be, that is the question.",
+  "author": "William Shakespeare"
+}
+```
+2.  To get all quotes for the currently authenticated user, send a `GET` request to `http://localhost:5000/quotes`.
+3.  To get a specific quote by ID, send a `GET` request to `http://localhost:5000/quotes/<quote_id>`.
+4.  To update a specific quote by ID, send a `PUT` request to `http://localhost:5000/quotes/<quote_id>` with the following JSON payload:
+```
+{
+    "quote": "The greatest glory in living lies not in never falling, but in rising every time we fall.",
+    "author": "Nelson Mandela"
+}
+```
+5.  To delete a specific quote by ID, send a `DELETE` request to `http://localhost:5000/quotes/<quote_id>`.
 
-`{ "quote": "<updated_quote_text>" }`
 
-7.  To delete a specific quote by ID, send a `DELETE` request to `http://localhost:5000/quotes/<quote_id>`.
+Note: To use the API, you need to provide authentication credentials with your request. You can do this by including an `Authorization` header in your request with the value `Basic <base64-encoded-username-and-password>`. You can generate a password hash with the following short code:
 
-Note: For steps 3-7, you need to provide authentication credentials with your request. You can do this by including an `Authorization` header in your request with the value `Basic <base64-encoded-username-and-password>`.
+```
+from werkzeug.security import generate_password_hash
+
+password = 'your password here'
+hashed_password = generate_password_hash(password)
+
+print(hashed_password)
+```
+
+Note: I added the user to the DB manually. In Postgres you can do that by:
+```
+INSERT INTO "user" (username, password_hash)
+VALUES ('newuser', 'passwordhash');
+```
+
+## Sample implementation
+Implementation of this project can be found here https://quote-generator-cshw.onrender.com/
+
+
